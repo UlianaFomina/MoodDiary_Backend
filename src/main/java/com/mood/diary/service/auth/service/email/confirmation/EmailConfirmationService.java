@@ -1,4 +1,4 @@
-package com.mood.diary.service.auth.service.email;
+package com.mood.diary.service.auth.service.email.confirmation;
 
 public interface EmailConfirmationService {
     boolean findById(String id);

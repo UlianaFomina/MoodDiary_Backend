@@ -4,7 +4,7 @@ import com.mood.diary.service.auth.model.request.AuthenticationRequest;
 import com.mood.diary.service.auth.model.request.RegisterRequest;
 import com.mood.diary.service.auth.model.response.AuthenticationResponse;
 import com.mood.diary.service.auth.service.AuthenticationService;
-import com.mood.diary.service.auth.service.email.EmailConfirmationService;
+import com.mood.diary.service.auth.service.email.confirmation.EmailConfirmationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

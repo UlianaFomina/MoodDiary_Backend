@@ -1,4 +1,4 @@
-package com.mood.diary.service.auth.service.email;
+package com.mood.diary.service.auth.service.email.confirmation;
 
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;

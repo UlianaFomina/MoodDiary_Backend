@@ -1,5 +1,6 @@
 package com.mood.diary.service.auth.service;
 
+import com.mood.diary.service.auth.constant.EmailTemplate;
 import com.mood.diary.service.auth.exception.variants.UserEmailNotConfirmedException;
 import com.mood.diary.service.auth.exception.variants.UserNotFoundException;
 import com.mood.diary.service.auth.model.AuthUser;
@@ -7,9 +8,11 @@ import com.mood.diary.service.auth.model.request.AuthenticationRequest;
 import com.mood.diary.service.auth.model.request.RegisterRequest;
 import com.mood.diary.service.auth.model.response.AuthenticationResponse;
 import com.mood.diary.service.auth.repository.AuthUserRepository;
-import com.mood.diary.service.auth.service.email.EmailConfirmationService;
+import com.mood.diary.service.auth.service.email.confirmation.EmailConfirmationService;
+import com.mood.diary.service.auth.service.email.send.EmailSendService;
 import com.mood.diary.service.auth.service.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,8 +26,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
+    @Value("${server.url}")
+    private String serverUrl;
+
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final EmailSendService emailSendService;
     private final AuthUserRepository authUserRepository;
     private final AuthenticationManager authenticationManager;
     private final EmailConfirmationService emailConfirmationService;
@@ -46,7 +53,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         AuthUser savedUser = authUserRepository.save(user);
 
         String token = UUID.randomUUID().toString();
+        String link = String.format("%s/api/v1/auth/confirm?token=%s", serverUrl, savedUser.getId());
+        String emailTemplate = EmailTemplate.buildEmail(savedUser.getUsername(), link);
+
         emailConfirmationService.putConfirmationToken(savedUser.getId(), token);
+        emailSendService.send(savedUser.getEmail(), emailTemplate);
 
         return token(savedUser);
     }
