@@ -1,18 +1,16 @@
 package com.mood.diary.service.auth.service;
 
 import com.mood.diary.service.auth.constant.EmailTemplate;
-import com.mood.diary.service.auth.exception.variants.UserAlreadyExistsException;
 import com.mood.diary.service.auth.exception.variants.UserEmailNotConfirmedException;
-import com.mood.diary.service.auth.exception.variants.UserNotFoundException;
-import com.mood.diary.service.auth.model.AuthUser;
-import com.mood.diary.service.auth.model.AuthUserRole;
 import com.mood.diary.service.auth.model.request.AuthenticationRequest;
 import com.mood.diary.service.auth.model.request.RegisterRequest;
 import com.mood.diary.service.auth.model.response.AuthenticationResponse;
-import com.mood.diary.service.auth.repository.AuthUserRepository;
 import com.mood.diary.service.auth.service.email.confirmation.EmailConfirmationService;
 import com.mood.diary.service.auth.service.email.send.EmailSendService;
 import com.mood.diary.service.auth.service.jwt.JwtService;
+import com.mood.diary.service.user.model.AuthUser;
+import com.mood.diary.service.user.model.AuthUserRole;
+import com.mood.diary.service.user.service.AuthUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,8 +31,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthUserService authUserService;
     private final EmailSendService emailSendService;
-    private final AuthUserRepository authUserRepository;
     private final AuthenticationManager authenticationManager;
     private final EmailConfirmationService emailConfirmationService;
 
@@ -42,11 +40,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public AuthenticationResponse register(RegisterRequest registerRequest) {
         String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
-        String userEmail = registerRequest.getEmail();
+        String email = registerRequest.getEmail();
         String username = registerRequest.getUsername();
         AuthUser user = AuthUser.builder()
                 .username(username)
-                .email(userEmail)
+                .email(email)
                 .password(encodedPassword)
                 .role(AuthUserRole.USER)
                 .about(registerRequest.getAbout())
@@ -54,19 +52,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .imageUrl(registerRequest.getImageUrl())
                 .build();
 
-        authUserRepository.findAuthUserByEmail(userEmail)
-                .ifPresent(e -> {
-                    String exceptionMessage = String.format("User with this email: '%s' already exists, please login!", userEmail);
-                    throw new UserAlreadyExistsException(exceptionMessage);
-                });
+        authUserService.validateUniqueUsernameAndEmail(username, email);
 
-        authUserRepository.findAuthUserByUsername(username)
-                .ifPresent(e -> {
-                    String exceptionMessage = String.format("User with this username: '%s' already exists, please login!", username);
-                    throw new UserAlreadyExistsException(exceptionMessage);
-                });
-
-        AuthUser savedUser = authUserRepository.save(user);
+        AuthUser savedUser = authUserService.save(user);
 
         String token = UUID.randomUUID().toString();
         String link = String.format("%s/api/v1/auth/confirm?token=%s", serverUrl, savedUser.getId());
@@ -86,9 +74,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         );
         authenticationManager.authenticate(token);
 
-        AuthUser user = authUserRepository
-                .findAuthUserByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(String.format("User with username: '%s' not found!", username)));
+        AuthUser user = authUserService.findByUsername(username);
 
         boolean isTokenExists = emailConfirmationService.findById(user.getId());
 
@@ -98,6 +84,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         return token(user);
+    }
+
+    @Override
+    public void resetPassword(String token, String email) {
+
     }
 
     private AuthenticationResponse token(UserDetails userDetails) {

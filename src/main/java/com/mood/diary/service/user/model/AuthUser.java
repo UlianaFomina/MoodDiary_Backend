@@ -1,4 +1,4 @@
-package com.mood.diary.service.auth.model;
+package com.mood.diary.service.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.mood.diary.service.auth.model;
+package com.mood.diary.service.user.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

@@ -20,6 +20,7 @@
 		<testcontainers.version>1.18.0</testcontainers.version>
 		<redisson.version>3.21.0</redisson.version>
 		<swagger.version>2.0.2</swagger.version>
+		<redis.testcontainers.version>1.4.6</redis.testcontainers.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -97,6 +98,12 @@
 			<groupId>org.testcontainers</groupId>
 			<artifactId>mongodb</artifactId>
 			<version>${testcontainers.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.redis.testcontainers</groupId>
+			<artifactId>testcontainers-redis-junit-jupiter</artifactId>
+			<version>${redis.testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 
