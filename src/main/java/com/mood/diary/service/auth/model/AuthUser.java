@@ -1,16 +1,17 @@
-package com.mood.diary.service.auth;
+package com.mood.diary.service.auth.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,12 +24,19 @@ public class AuthUser implements UserDetails {
 
     @Id
     private String id;
-    private String username;
-    private String password;
-    private String email;
-    private LocalDateTime dateOfBirth;
 
-    private UserRole role;
+    @Indexed(unique = true)
+    private String username;
+
+    @Indexed(unique = true)
+    private String email;
+
+    private String password;
+    private String about;
+    private LocalDate dateOfBirth;
+    private String imageUrl;
+
+    private AuthUserRole role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

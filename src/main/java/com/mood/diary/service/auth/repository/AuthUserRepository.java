@@ -1,5 +1,6 @@
-package com.mood.diary.service.auth;
+package com.mood.diary.service.auth.repository;
 
+import com.mood.diary.service.auth.model.AuthUser;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
