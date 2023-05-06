@@ -1,12 +1,22 @@
-package com.mood.diary.service.user.service;
+package com.mood.diary.service.user;
 
 import com.mood.diary.service.AbstractServiceTest;
 import com.mood.diary.service.auth.exception.variants.UserAlreadyExistsException;
 import com.mood.diary.service.auth.exception.variants.UserNotFoundException;
 import com.mood.diary.service.user.model.AuthUser;
+import com.mood.diary.service.user.service.AuthUserService;
+import com.redis.testcontainers.RedisContainer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.utility.DockerImageName;
+
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -16,6 +26,22 @@ class AuthUserServiceTest extends AbstractServiceTest {
     @Autowired
     AuthUserService authUserService;
 
+    @Container
+    static MongoDBContainer container = new MongoDBContainer("mongo:4.0.10");
+
+    @Container
+    static RedisContainer redisContainer = new RedisContainer(DockerImageName.parse("redis:latest"))
+            .withExposedPorts(6379);
+
+    @DynamicPropertySource
+    public static void setProperties(DynamicPropertyRegistry registry) {
+        String redisHost = String.format("redis://%s:%s", redisContainer.getHost(), redisContainer.getMappedPort(6379));
+        Supplier<Object> redisSupplier = () -> redisHost;
+
+        registry.add("spring.data.mongodb.uri", container::getReplicaSetUrl);
+        registry.add("redis.uri", redisSupplier);
+    }
+
     @Test
     void getByUsername_exists() {
         String username = "username";
@@ -24,8 +50,21 @@ class AuthUserServiceTest extends AbstractServiceTest {
 
         AuthUser dbUser = authUserService.findByUsername(username);
 
-        assertThat(dbUser.getEmail()).isEqualTo(email);
         assertThat(dbUser.getUsername()).isEqualTo(username);
+        assertThat(dbUser.getEmail()).isEqualTo(email);
+
+        assertThat(dbUser.getPassword()).isNotNull();
+        assertThat(dbUser.getAbout()).isNotNull();
+        assertThat(dbUser.getImageUrl()).isNotNull();
+        assertThat(dbUser.getRole()).isNotNull();
+        assertThat(dbUser.getDateOfBirth()).isNotNull();
+
+        assertThat(dbUser.getAuthorities().stream().map(GrantedAuthority::getAuthority))
+                .containsExactlyInAnyOrder(dbUser.getRole().name());
+        assertThat(dbUser.isAccountNonExpired()).isTrue();
+        assertThat(dbUser.isAccountNonLocked()).isTrue();
+        assertThat(dbUser.isCredentialsNonExpired()).isTrue();
+        assertThat(dbUser.isEnabled()).isTrue();
     }
 
     @Test
@@ -44,6 +83,10 @@ class AuthUserServiceTest extends AbstractServiceTest {
 
         assertThat(dbUser.getUsername()).isEqualTo(username);
         assertThat(dbUser.getEmail()).isEqualTo(email);
+        assertThat(dbUser.getPassword()).isNotNull();
+        assertThat(dbUser.getAbout()).isNotNull();
+        assertThat(dbUser.getImageUrl()).isNotNull();
+        assertThat(dbUser.getRole()).isNotNull();
     }
 
     @Test
@@ -98,15 +141,5 @@ class AuthUserServiceTest extends AbstractServiceTest {
 
         assertThatNoException()
                 .isThrownBy(() -> authUserService.validateUniqueUsernameAndEmail("randomUsername", "randomEmail@gmail.com"));
-    }
-
-    private void initDefaultUser(String username, String email) {
-        AuthUser dbUser = AuthUser
-                .builder()
-                .username(username)
-                .email(email)
-                .build();
-
-        authUserRepository.save(dbUser);
     }
 }

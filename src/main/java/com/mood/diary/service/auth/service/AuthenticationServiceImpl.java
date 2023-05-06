@@ -86,11 +86,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return token(user);
     }
 
-    @Override
-    public void resetPassword(String token, String email) {
-
-    }
-
     private AuthenticationResponse token(UserDetails userDetails) {
         String jwtToken = jwtService.generateToken(userDetails);
 

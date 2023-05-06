@@ -7,5 +7,4 @@ import com.mood.diary.service.auth.model.response.AuthenticationResponse;
 public interface AuthenticationService {
     AuthenticationResponse register(RegisterRequest registerRequest);
     AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest);
-    void resetPassword(String token, String email);
 }

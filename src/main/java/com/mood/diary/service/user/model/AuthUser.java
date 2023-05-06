@@ -1,9 +1,6 @@
 package com.mood.diary.service.user.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,11 +12,11 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
-@Data
+@Getter
 @Builder
-@Document(collection = "user")
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(collection = "user")
 public class AuthUser implements UserDetails {
 
     @Id
