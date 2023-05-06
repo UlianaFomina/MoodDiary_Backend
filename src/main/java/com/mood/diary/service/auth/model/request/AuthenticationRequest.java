@@ -13,5 +13,7 @@ import lombok.NoArgsConstructor;
 public class AuthenticationRequest {
     @Size(min = 4, max = 10)
     private String username;
+
+    @Size(min = 6, max = 12)
     private String password;
 }

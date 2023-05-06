@@ -5,6 +5,7 @@ import com.mood.diary.service.auth.exception.variants.UserAlreadyExistsException
 import com.mood.diary.service.auth.exception.variants.UserEmailNotConfirmedException;
 import com.mood.diary.service.auth.exception.variants.UserNotFoundException;
 import com.mood.diary.service.auth.model.AuthUser;
+import com.mood.diary.service.auth.model.AuthUserRole;
 import com.mood.diary.service.auth.model.request.AuthenticationRequest;
 import com.mood.diary.service.auth.model.request.RegisterRequest;
 import com.mood.diary.service.auth.model.response.AuthenticationResponse;
@@ -47,7 +48,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .username(username)
                 .email(userEmail)
                 .password(encodedPassword)
-                .role(registerRequest.getRole())
+                .role(AuthUserRole.USER)
                 .about(registerRequest.getAbout())
                 .dateOfBirth(registerRequest.getDateOfBirth())
                 .imageUrl(registerRequest.getImageUrl())
