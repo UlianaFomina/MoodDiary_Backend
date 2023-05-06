@@ -12,11 +12,12 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class EmailConfirmationServiceImpl implements EmailConfirmationService {
 
+    private static final String CONFIRMATION_TOKENS = "confirmation-tokens";
     private final RedissonClient redissonClient;
 
     @Override
     public boolean findById(String id) {
-        return redissonClient.getMapCache("confirmation-tokens").containsKey(id);
+        return redissonClient.getMapCache(CONFIRMATION_TOKENS).containsKey(id);
     }
 
     @Override
@@ -37,7 +38,7 @@ public class EmailConfirmationServiceImpl implements EmailConfirmationService {
             return "You account successfully activated!";
         }
 
-        return "Your account not activated!";
+        return "Link expired!";
     }
 
     @PreDestroy

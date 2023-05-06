@@ -1,5 +1,6 @@
 package com.mood.diary.service.auth.exception;
 
+import com.mood.diary.service.auth.exception.variants.UserAlreadyExistsException;
 import com.mood.diary.service.auth.exception.variants.UserEmailNotConfirmedException;
 import com.mood.diary.service.auth.exception.variants.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -26,11 +27,22 @@ public class AuthExceptionControllerAdvice {
 
     @ExceptionHandler(UserEmailNotConfirmedException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    public ErrorMessage userEmailNotConfirmedException(UserEmailNotConfirmedException userNotFoundException, WebRequest webRequest) {
+    public ErrorMessage userEmailNotConfirmedException(UserEmailNotConfirmedException userEmailNotConfirmedException, WebRequest webRequest) {
         return new ErrorMessage(
                 HttpStatus.FORBIDDEN.value(),
                 new Date(),
-                userNotFoundException.getMessage(),
+                userEmailNotConfirmedException.getMessage(),
+                webRequest.getDescription(false)
+        );
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    public ErrorMessage userAlreadyExistsException(UserAlreadyExistsException userAlreadyExistsException, WebRequest webRequest) {
+        return new ErrorMessage(
+                HttpStatus.CONFLICT.value(),
+                new Date(),
+                userAlreadyExistsException.getMessage(),
                 webRequest.getDescription(false)
         );
     }

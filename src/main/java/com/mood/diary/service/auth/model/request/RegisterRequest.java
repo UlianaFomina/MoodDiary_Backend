@@ -32,6 +32,8 @@ public class RegisterRequest {
     @NotNull
     private AuthUserRole role;
 
+    @NotNull
     private String password;
+
     private String imageUrl;
 }
