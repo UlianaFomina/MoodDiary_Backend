@@ -1,9 +1,11 @@
 package com.mood.diary.service.auth.service;
 
 import com.mood.diary.service.auth.constant.EmailTemplate;
+import com.mood.diary.service.auth.exception.variants.UserAlreadyExistsException;
 import com.mood.diary.service.auth.exception.variants.UserEmailNotConfirmedException;
 import com.mood.diary.service.auth.exception.variants.UserNotFoundException;
 import com.mood.diary.service.auth.model.AuthUser;
+import com.mood.diary.service.auth.model.AuthUserRole;
 import com.mood.diary.service.auth.model.request.AuthenticationRequest;
 import com.mood.diary.service.auth.model.request.RegisterRequest;
 import com.mood.diary.service.auth.model.response.AuthenticationResponse;
@@ -40,15 +42,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public AuthenticationResponse register(RegisterRequest registerRequest) {
         String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
+        String userEmail = registerRequest.getEmail();
+        String username = registerRequest.getUsername();
         AuthUser user = AuthUser.builder()
-                .username(registerRequest.getUsername())
-                .email(registerRequest.getEmail())
+                .username(username)
+                .email(userEmail)
                 .password(encodedPassword)
-                .role(registerRequest.getRole())
+                .role(AuthUserRole.USER)
                 .about(registerRequest.getAbout())
                 .dateOfBirth(registerRequest.getDateOfBirth())
                 .imageUrl(registerRequest.getImageUrl())
                 .build();
+
+        authUserRepository.findAuthUserByEmail(userEmail)
+                .ifPresent(e -> {
+                    String exceptionMessage = String.format("User with this email: '%s' already exists, please login!", userEmail);
+                    throw new UserAlreadyExistsException(exceptionMessage);
+                });
+
+        authUserRepository.findAuthUserByUsername(username)
+                .ifPresent(e -> {
+                    String exceptionMessage = String.format("User with this username: '%s' already exists, please login!", username);
+                    throw new UserAlreadyExistsException(exceptionMessage);
+                });
 
         AuthUser savedUser = authUserRepository.save(user);
 

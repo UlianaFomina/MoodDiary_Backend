@@ -1,6 +1,5 @@
 package com.mood.diary.service.auth.model.request;
 
-import com.mood.diary.service.auth.model.AuthUserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -29,9 +28,8 @@ public class RegisterRequest {
     @NotNull
     private LocalDate dateOfBirth;
 
-    @NotNull
-    private AuthUserRole role;
-
+    @Size(min = 6, max = 12)
     private String password;
+
     private String imageUrl;
 }
