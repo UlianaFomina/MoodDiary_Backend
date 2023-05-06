@@ -22,14 +22,14 @@ public class EmailConfirmationServiceImpl implements EmailConfirmationService {
 
     @Override
     public void putConfirmationToken(String id, String token) {
-        RMapCache<Object, Object> tokenMap = redissonClient.getMapCache("confirmation-tokens");
+        RMapCache<Object, Object> tokenMap = redissonClient.getMapCache(CONFIRMATION_TOKENS);
 
         tokenMap.put(id, token, 15, TimeUnit.MINUTES);
     }
 
     @Override
     public String confirmToken(String token) {
-        RMapCache<Object, Object> tokenMap = redissonClient.getMapCache("confirmation-tokens");
+        RMapCache<Object, Object> tokenMap = redissonClient.getMapCache(CONFIRMATION_TOKENS);
         boolean isExists = findById(token);
 
         if (isExists) {
