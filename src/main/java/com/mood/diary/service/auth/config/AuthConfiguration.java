@@ -31,7 +31,7 @@ public class AuthConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**")
+                .requestMatchers("/api/v1/auth/**", "/swagger-ui/**", "/v3/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
