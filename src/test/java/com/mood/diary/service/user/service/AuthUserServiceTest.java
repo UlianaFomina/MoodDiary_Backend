@@ -1,14 +1,14 @@
 package com.mood.diary.service.user.service;
 
 import com.mood.diary.service.AbstractServiceTest;
+import com.mood.diary.service.auth.exception.variants.UserAlreadyExistsException;
 import com.mood.diary.service.auth.exception.variants.UserNotFoundException;
 import com.mood.diary.service.user.model.AuthUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class AuthUserServiceTest extends AbstractServiceTest {
@@ -68,6 +68,36 @@ class AuthUserServiceTest extends AbstractServiceTest {
 
         assertThat(dbUser.getUsername()).isEqualTo(username);
         assertThat(dbUser.getEmail()).isEqualTo(email);
+    }
+
+    @Test
+    void validateUniqueUsername_throwException() {
+        String username = "username";
+        String email = "email@gmail.com";
+        initDefaultUser(username, email);
+
+        assertThatExceptionOfType(UserAlreadyExistsException.class)
+                .isThrownBy(() -> authUserService.validateUniqueUsernameAndEmail(username, "randomEmail@gmail.com"));
+    }
+
+    @Test
+    void validateUniqueEmail_throwException() {
+        String username = "username";
+        String email = "email@gmail.com";
+        initDefaultUser(username, email);
+
+        assertThatExceptionOfType(UserAlreadyExistsException.class)
+                .isThrownBy(() -> authUserService.validateUniqueUsernameAndEmail(username, email));
+    }
+
+    @Test
+    void validateUniqueEmail_pass() {
+        String username = "username";
+        String email = "email@gmail.com";
+        initDefaultUser(username, email);
+
+        assertThatNoException()
+                .isThrownBy(() -> authUserService.validateUniqueUsernameAndEmail("randomUsername", "randomEmail@gmail.com"));
     }
 
     private void initDefaultUser(String username, String email) {
