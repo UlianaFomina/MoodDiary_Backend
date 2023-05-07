@@ -7,6 +7,7 @@ import lombok.*;
 @Getter
 @Builder
 @AllArgsConstructor
+@Schema(description = "Authentication request body")
 public class AuthenticationRequest {
 
     @Size(min = 4, max = 10)

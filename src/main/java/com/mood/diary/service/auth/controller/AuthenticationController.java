@@ -38,7 +38,7 @@ public class AuthenticationController {
     )
     @PostMapping("/registration")
     public AuthenticationResponse register(
-            @Parameter(description = "Body of registration request")
+            @Parameter(description = "Body of registration request", required = true)
             @Valid @RequestBody RegisterRequest request) {
         return authenticationService.register(request);
     }
@@ -53,7 +53,7 @@ public class AuthenticationController {
     )
     @PostMapping("/authenticate")
     public AuthenticationResponse authenticate(
-            @Parameter(description = "Body of authenticate request")
+            @Parameter(description = "Body of authenticate request", required = true)
             @Valid @RequestBody AuthenticationRequest request) {
         return authenticationService.authenticate(request);
     }
@@ -68,7 +68,7 @@ public class AuthenticationController {
     )
     @GetMapping("/confirm")
     public String confirm(
-            @Parameter(description = "Verification token from email")
+            @Parameter(description = "Verification token from email", example = "auto-generated-token-on-mail", required = true)
             @Valid @NotNull @RequestParam("token") String token) {
         return emailConfirmationService.confirmToken(token);
     }
@@ -84,7 +84,7 @@ public class AuthenticationController {
     )
     @GetMapping("/reset-password")
     public String startResetPasswordProcedure(
-            @Parameter(description = "Which email use to reset password procedure")
+            @Parameter(description = "Which email use to reset password procedure", example = "email@gmail.com", required = true)
             @Valid @Email @RequestParam("email") String email) {
         return passwordRecoveryService.startResetPasswordProcedure(email);
     }
@@ -99,7 +99,7 @@ public class AuthenticationController {
     )
     @PostMapping("/reset-password")
     public String actualResetPassword(
-            @Parameter(description = "Body of entity with valid email and password")
+            @Parameter(description = "Body of entity with valid email and password", required = true)
             @Valid @RequestBody ResetPasswordRequest request) {
         return passwordRecoveryService.updateResetPassword(request);
     }
