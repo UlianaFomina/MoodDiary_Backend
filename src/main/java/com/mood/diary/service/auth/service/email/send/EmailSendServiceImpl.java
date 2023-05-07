@@ -18,14 +18,14 @@ public class EmailSendServiceImpl implements EmailSendService {
 
     @Override
     @Async
-    public void send(String to, String email) {
+    public void send(String to, String email, String subject) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
 
             helper.setText(email, true);
             helper.setTo(to);
-            helper.setSubject("MoodDiary: Confirm your email");
+            helper.setSubject(String.format("MoodDiary: %s", subject));
 
             helper.setFrom("zhenek02ss@gmail.com");
 

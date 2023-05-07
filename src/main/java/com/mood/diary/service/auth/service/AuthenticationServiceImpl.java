@@ -63,7 +63,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String emailTemplate = emailParseService.getVerificationTemplate(savedUser.getUsername(), link);
 
         emailConfirmationService.putConfirmationToken(savedUser.getId(), token);
-        emailSendService.send(savedUser.getEmail(), emailTemplate);
+        emailSendService.send(savedUser.getEmail(), emailTemplate, "Verify your email!");
 
         return token(savedUser);
     }

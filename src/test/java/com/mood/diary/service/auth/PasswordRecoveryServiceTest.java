@@ -65,7 +65,7 @@ class PasswordRecoveryServiceTest extends AbstractServiceTest {
     void startResetPasswordProcedure_valid() {
         AuthUser savedUser = initDefaultUser("username", "email@gmail.com");
 
-        doNothing().when(emailSendService).send(any(), any());
+        doNothing().when(emailSendService).send(any(), any(), any());
         String response = passwordRecoveryService.startResetPasswordProcedure(savedUser.getEmail());
 
         assertThat(response).isEqualTo("Please check your email for reset password link!");
@@ -75,7 +75,7 @@ class PasswordRecoveryServiceTest extends AbstractServiceTest {
     void startResetPasswordProcedure_throwProcedureAlreadyStarted() {
         AuthUser savedUser = initDefaultUser("username", "email@gmail.com");
 
-        doNothing().when(emailSendService).send(any(), any());
+        doNothing().when(emailSendService).send(any(), any(), any());
         String response = passwordRecoveryService.startResetPasswordProcedure(savedUser.getEmail());
 
         assertThat(response).isEqualTo("Please check your email for reset password link!");
@@ -99,7 +99,7 @@ class PasswordRecoveryServiceTest extends AbstractServiceTest {
         String newPassword = "newPassword";
         AuthUser savedUser = initDefaultUser("username", email);
 
-        doNothing().when(emailSendService).send(any(), any());
+        doNothing().when(emailSendService).send(any(), any(), any());
         String response = passwordRecoveryService.startResetPasswordProcedure(savedUser.getEmail());
 
         String encodedPassword = "encodedPassword";
@@ -120,7 +120,7 @@ class PasswordRecoveryServiceTest extends AbstractServiceTest {
         String email = "email@gmail.com";
         AuthUser savedUser = initDefaultUser("username", email);
 
-        doNothing().when(emailSendService).send(any(), any());
+        doNothing().when(emailSendService).send(any(), any(), any());
         passwordRecoveryService.startResetPasswordProcedure(savedUser.getEmail());
 
         String token = passwordRecoveryService.getByEmail(email);
@@ -140,7 +140,7 @@ class PasswordRecoveryServiceTest extends AbstractServiceTest {
         String email = "email@gmail.com";
         AuthUser savedUser = initDefaultUser("username", email);
 
-        doNothing().when(emailSendService).send(any(), any());
+        doNothing().when(emailSendService).send(any(), any(), any());
         passwordRecoveryService.startResetPasswordProcedure(savedUser.getEmail());
 
         passwordRecoveryService.resetEmail(email);

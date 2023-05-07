@@ -50,7 +50,7 @@ public class PasswordRecoveryServiceImpl implements PasswordRecoveryService {
         String link = String.format("%s/resetPassword?token=%s", frontendUrl, token);
         String emailTemplate = emailParseTemplateService.getResetPasswordTemplate(email, link);
 
-        emailSendService.send(email, emailTemplate);
+        emailSendService.send(email, emailTemplate, "Password Recovery");
 
         return "Please check your email for reset password link!";
     }
