@@ -1,5 +1,6 @@
 package com.mood.diary.service.user.model;
 
+import com.mood.diary.service.story.model.Story;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -9,10 +10,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,6 +37,8 @@ public class AuthUser implements UserDetails {
     private String imageUrl;
 
     private AuthUserRole role;
+
+    private List<Story> stories = new ArrayList<>();
 
     public AuthUser setPassword(String password) {
         this.password = password;
