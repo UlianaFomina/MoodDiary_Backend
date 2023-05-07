@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 public class GlobalRestControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorMessage handleMethodArgumentNotValid(MethodArgumentNotValidException methodArgumentNotValidException, WebRequest webRequest) {
         List<ErrorDetail> errors = methodArgumentNotValidException.getFieldErrors()
                 .stream()
@@ -27,9 +28,25 @@ public class GlobalRestControllerAdvice {
                 .toList();
 
         return new ErrorMessage(
-                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                HttpStatus.BAD_REQUEST.value(),
                 new Date(),
                 errors,
+                webRequest.getDescription(false)
+        );
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorMessage notSupportedException(MethodArgumentTypeMismatchException argument, WebRequest webRequest) {
+        String exceptionMessage = String.format(
+                "Argument '%s': have invalid type! Required type is: '%s'",
+                argument.getPropertyName(),
+                argument.getRequiredType()
+        );
+        return new ErrorMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                new Date(),
+                List.of(new ErrorDetail(exceptionMessage)),
                 webRequest.getDescription(false)
         );
     }
