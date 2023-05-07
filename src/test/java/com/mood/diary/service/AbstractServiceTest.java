@@ -1,6 +1,6 @@
 package com.mood.diary.service;
 
-import com.mood.diary.service.auth.repository.AuthUserRepository;
+import com.mood.diary.service.user.repository.AuthUserRepository;
 import com.mood.diary.service.user.model.AuthUser;
 import com.mood.diary.service.util.EntityBuilder;
 import org.junit.jupiter.api.AfterEach;

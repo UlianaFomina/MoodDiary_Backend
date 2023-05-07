@@ -3,10 +3,14 @@ package com.mood.diary.service.util;
 import com.mood.diary.service.auth.model.request.AuthenticationRequest;
 import com.mood.diary.service.auth.model.request.RegisterRequest;
 import com.mood.diary.service.auth.model.request.ResetPasswordRequest;
+import com.mood.diary.service.story.model.Story;
 import com.mood.diary.service.user.model.AuthUser;
 import com.mood.diary.service.user.model.AuthUserRole;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class EntityBuilder {
 
@@ -49,6 +53,7 @@ public class EntityBuilder {
                 .dateOfBirth(LocalDate.now())
                 .about(about)
                 .imageUrl(imageUrl)
+                .stories(new ArrayList<>())
                 .build();
     }
 
@@ -56,6 +61,17 @@ public class EntityBuilder {
         return ResetPasswordRequest.builder()
                 .email(email)
                 .newPassword(newPassword)
+                .build();
+    }
+
+    public static Story buildWithTime(String userId, String content, LocalDateTime createdAt) {
+        return Story.builder()
+                .userId(userId)
+                .id(UUID.randomUUID().toString())
+                .content(content)
+                .updatedAt(LocalDateTime.now())
+                .createdAt(createdAt)
+                .satisfactionRate(0.4)
                 .build();
     }
 }
