@@ -3,7 +3,7 @@ package com.mood.diary.service.user.service;
 import com.mood.diary.service.auth.exception.variants.UserAlreadyExistsException;
 import com.mood.diary.service.auth.exception.variants.UserNotFoundException;
 import com.mood.diary.service.user.model.AuthUser;
-import com.mood.diary.service.auth.repository.AuthUserRepository;
+import com.mood.diary.service.user.repository.AuthUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
