@@ -1,10 +1,11 @@
 package com.mood.diary.service.story.controller;
 
-import com.mood.diary.service.story.service.StoryService;
 import com.mood.diary.service.story.model.Story;
 import com.mood.diary.service.story.model.request.StoryRequest;
 import com.mood.diary.service.story.model.request.UpdateStoryRequest;
+import com.mood.diary.service.story.service.StoryService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +19,13 @@ public class StoryController {
     private final StoryService storyService;
 
     @GetMapping("{userId}")
-    public List<Story> getAllByUserId(@PathVariable String userId) {
+    public List<Story> getAllByUserId(@Valid @NotNull @PathVariable String userId) {
         return storyService.findAllByUserId(userId);
     }
 
     @GetMapping("{userId}/{storyId}")
-    public Story getByUserIdAndStoryId(@PathVariable String userId, @PathVariable String storyId) {
+    public Story getByUserIdAndStoryId(@Valid @NotNull @PathVariable String userId,
+                                       @Valid @NotNull @PathVariable String storyId) {
         return storyService.findByUserIdAndStoryId(userId, storyId);
     }
 
