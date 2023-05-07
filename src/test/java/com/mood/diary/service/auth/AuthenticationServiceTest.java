@@ -149,8 +149,4 @@ class AuthenticationServiceTest extends AbstractServiceTest {
         assertThatExceptionOfType(UserNotFoundException.class)
                 .isThrownBy(() -> authenticationService.authenticate(request));
     }
-
-    @Test
-    void resetPassword() {
-    }
 }
