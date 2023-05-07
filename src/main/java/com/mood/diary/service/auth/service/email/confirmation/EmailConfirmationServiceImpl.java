@@ -24,7 +24,7 @@ public class EmailConfirmationServiceImpl implements EmailConfirmationService {
     public void putConfirmationToken(String id, String token) {
         RMapCache<Object, Object> tokenMap = redissonClient.getMapCache(CONFIRMATION_TOKENS);
 
-        tokenMap.put(id, token, 15, TimeUnit.MINUTES);
+        tokenMap.put(id, token, 15L, TimeUnit.MINUTES);
     }
 
     @Override
