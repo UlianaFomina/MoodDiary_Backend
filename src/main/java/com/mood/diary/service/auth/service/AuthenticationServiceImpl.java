@@ -1,6 +1,7 @@
 package com.mood.diary.service.auth.service;
 
 import com.mood.diary.service.auth.constant.EmailTemplate;
+import com.mood.diary.service.auth.exception.variants.PasswordMustNotBeEqualsPreviousException;
 import com.mood.diary.service.auth.exception.variants.UserEmailNotConfirmedException;
 import com.mood.diary.service.auth.model.request.AuthenticationRequest;
 import com.mood.diary.service.auth.model.request.RegisterRequest;
@@ -84,6 +85,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         return token(user);
+    }
+
+    @Override
+    public void resetPassword(AuthUser authUser, String newPassword) {
+        AuthUser dbUser = authUserService.findByEmail(authUser.getEmail());
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        if(dbUser.getPassword().equals(newPassword)) {
+            throw new PasswordMustNotBeEqualsPreviousException("New password must not be identical to the new one!");
+        }
+        dbUser.setPassword(encodedPassword);
+
+        authUserService.save(dbUser);
     }
 
     private AuthenticationResponse token(UserDetails userDetails) {

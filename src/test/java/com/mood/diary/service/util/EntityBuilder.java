@@ -2,6 +2,7 @@ package com.mood.diary.service.util;
 
 import com.mood.diary.service.auth.model.request.AuthenticationRequest;
 import com.mood.diary.service.auth.model.request.RegisterRequest;
+import com.mood.diary.service.auth.model.request.ResetPasswordRequest;
 import com.mood.diary.service.user.model.AuthUser;
 import com.mood.diary.service.user.model.AuthUserRole;
 
@@ -48,6 +49,13 @@ public class EntityBuilder {
                 .dateOfBirth(LocalDate.now())
                 .about(about)
                 .imageUrl(imageUrl)
+                .build();
+    }
+
+    public static ResetPasswordRequest makeResetRequest(String email, String newPassword) {
+        return ResetPasswordRequest.builder()
+                .email(email)
+                .newPassword(newPassword)
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package com.mood.diary.service.auth;
 
 import com.mood.diary.service.AbstractServiceTest;
+import com.mood.diary.service.auth.exception.variants.TokenExpiredException;
 import com.mood.diary.service.auth.service.email.confirmation.EmailConfirmationService;
 import com.redis.testcontainers.RedisContainer;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class EmailConfirmationServiceTest extends AbstractServiceTest {
@@ -86,9 +88,9 @@ class EmailConfirmationServiceTest extends AbstractServiceTest {
         emailConfirmationService.putConfirmationToken(idKey, "value");
 
         String response = emailConfirmationService.confirmToken(idKey);
-        String expiredResponse = emailConfirmationService.confirmToken(idKey);
 
         assertThat(response).isEqualTo("You account successfully activated!");
-        assertThat(expiredResponse).isEqualTo("Link expired!");
+        assertThatExceptionOfType(TokenExpiredException.class)
+                .isThrownBy(() -> emailConfirmationService.confirmToken(idKey));
     }
 }

@@ -1,8 +1,8 @@
 package com.mood.diary.service.auth.exception;
 
-import com.mood.diary.service.auth.exception.variants.UserAlreadyExistsException;
-import com.mood.diary.service.auth.exception.variants.UserEmailNotConfirmedException;
-import com.mood.diary.service.auth.exception.variants.UserNotFoundException;
+import com.mood.diary.service.auth.exception.variants.*;
+import com.mood.diary.service.exception.model.ErrorDetail;
+import com.mood.diary.service.exception.model.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.Date;
+import java.util.List;
 
 @RestControllerAdvice
 public class AuthExceptionControllerAdvice {
@@ -20,7 +21,7 @@ public class AuthExceptionControllerAdvice {
         return new ErrorMessage(
                 HttpStatus.NOT_FOUND.value(),
                 new Date(),
-                userNotFoundException.getMessage(),
+                List.of(new ErrorDetail(userNotFoundException.getMessage())),
                 webRequest.getDescription(false)
         );
     }
@@ -31,7 +32,7 @@ public class AuthExceptionControllerAdvice {
         return new ErrorMessage(
                 HttpStatus.FORBIDDEN.value(),
                 new Date(),
-                userEmailNotConfirmedException.getMessage(),
+                List.of(new ErrorDetail(userEmailNotConfirmedException.getMessage())),
                 webRequest.getDescription(false)
         );
     }
@@ -42,7 +43,40 @@ public class AuthExceptionControllerAdvice {
         return new ErrorMessage(
                 HttpStatus.CONFLICT.value(),
                 new Date(),
-                userAlreadyExistsException.getMessage(),
+                List.of(new ErrorDetail(userAlreadyExistsException.getMessage())),
+                webRequest.getDescription(false)
+        );
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public ErrorMessage tokenExpiredException(TokenExpiredException tokenExpiredException, WebRequest webRequest) {
+        return new ErrorMessage(
+                HttpStatus.FORBIDDEN.value(),
+                new Date(),
+                List.of(new ErrorDetail(tokenExpiredException.getMessage())),
+                webRequest.getDescription(false)
+        );
+    }
+
+    @ExceptionHandler(PasswordResetProcedureStartedException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    public ErrorMessage passwordResetProcedureStartedException(PasswordResetProcedureStartedException passwordResetProcedureStartedException, WebRequest webRequest) {
+        return new ErrorMessage(
+                HttpStatus.CONFLICT.value(),
+                new Date(),
+                List.of(new ErrorDetail(passwordResetProcedureStartedException.getMessage())),
+                webRequest.getDescription(false)
+        );
+    }
+
+    @ExceptionHandler(PasswordMustNotBeEqualsPreviousException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    public ErrorMessage passwordMustNotBeEqualsPreviousException(PasswordMustNotBeEqualsPreviousException PasswordMustNotBeEqualsPreviousException, WebRequest webRequest) {
+        return new ErrorMessage(
+                HttpStatus.CONFLICT.value(),
+                new Date(),
+                List.of(new ErrorDetail(PasswordMustNotBeEqualsPreviousException.getMessage())),
                 webRequest.getDescription(false)
         );
     }

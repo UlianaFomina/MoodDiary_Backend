@@ -27,7 +27,7 @@ public class EmailSendServiceImpl implements EmailSendService {
             helper.setTo(to);
             helper.setSubject("MoodDiary: Confirm your email");
 
-            helper.setFrom("moodDiary@noreply.com");
+            helper.setFrom("zhenek02ss@gmail.com");
 
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {

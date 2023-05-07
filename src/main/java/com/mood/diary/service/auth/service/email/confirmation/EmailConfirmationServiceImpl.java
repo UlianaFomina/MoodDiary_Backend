@@ -1,5 +1,6 @@
 package com.mood.diary.service.auth.service.email.confirmation;
 
+import com.mood.diary.service.auth.exception.variants.TokenExpiredException;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RMapCache;
@@ -38,7 +39,7 @@ public class EmailConfirmationServiceImpl implements EmailConfirmationService {
             return "You account successfully activated!";
         }
 
-        return "Link expired!";
+        throw new TokenExpiredException("Link to activate account is expired!");
     }
 
     @PreDestroy

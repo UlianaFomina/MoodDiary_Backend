@@ -1,10 +1,11 @@
-package com.mood.diary.service.auth.exception;
+package com.mood.diary.service.exception.model;
 
 import java.util.Date;
+import java.util.List;
 
 public record ErrorMessage(
      int statusCode,
      Date timestamp,
-     String message,
+     List<ErrorDetail> errors,
      String description
 ) {}

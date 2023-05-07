@@ -35,6 +35,11 @@ public class AuthUser implements UserDetails {
 
     private AuthUserRole role;
 
+    public AuthUser setPassword(String password) {
+        this.password = password;
+        return this;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
