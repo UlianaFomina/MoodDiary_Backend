@@ -1,6 +1,7 @@
 package com.mood.diary.service.auth;
 
 import com.mood.diary.service.AbstractServiceTest;
+import com.mood.diary.service.auth.exception.variants.PasswordMustNotBeEqualsPreviousException;
 import com.mood.diary.service.auth.exception.variants.UserAlreadyExistsException;
 import com.mood.diary.service.auth.exception.variants.UserEmailNotConfirmedException;
 import com.mood.diary.service.auth.exception.variants.UserNotFoundException;
@@ -148,5 +149,20 @@ class AuthenticationServiceTest extends AbstractServiceTest {
 
         assertThatExceptionOfType(UserNotFoundException.class)
                 .isThrownBy(() -> authenticationService.authenticate(request));
+    }
+
+    @Test
+    void resetPassword_throwNewPasswordIdenticalToNew() {
+        String email = "email@gmail.com";
+        AuthUser newUser = initDefaultUser("username", email);
+
+        assertThatExceptionOfType(PasswordMustNotBeEqualsPreviousException.class)
+                .isThrownBy(() -> authenticationService.resetPassword(newUser, newUser.getPassword()));
+    }
+
+    @Test
+    void resetPassword_userNotFound() {
+        assertThatExceptionOfType(UserNotFoundException.class)
+                .isThrownBy(() -> authenticationService.resetPassword(new AuthUser(), ""));
     }
 }

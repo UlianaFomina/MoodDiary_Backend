@@ -25,12 +25,12 @@ public abstract class AbstractServiceTest {
         redissonClient.getKeys().flushall();
     }
 
-    protected void initDefaultUser(String username, String email) {
+    protected AuthUser initDefaultUser(String username, String email) {
         AuthUser dbUser = EntityBuilder.makeAuthUser(
                 username, "pass",
                 email, "about", "imageUrl"
         );
 
-        authUserRepository.save(dbUser);
+        return authUserRepository.save(dbUser);
     }
 }
