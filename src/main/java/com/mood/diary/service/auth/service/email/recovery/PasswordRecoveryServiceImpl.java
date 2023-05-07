@@ -61,7 +61,7 @@ public class PasswordRecoveryServiceImpl implements PasswordRecoveryService {
 
         String dbToken = getByEmail(email);
         if(dbToken == null) {
-            throw new TokenExpiredException("Password recovery procedure ended. Link expired!");
+            throw new TokenExpiredException("Password recovery link expired!");
         }
 
         resetEmail(email);

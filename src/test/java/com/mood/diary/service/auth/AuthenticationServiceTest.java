@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
@@ -33,7 +34,9 @@ import java.util.function.Supplier;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class AuthenticationServiceTest extends AbstractServiceTest {
@@ -46,6 +49,9 @@ class AuthenticationServiceTest extends AbstractServiceTest {
 
     @Autowired
     AuthUserService authUserService;
+
+    @MockBean
+    PasswordEncoder passwordEncoder;
 
     @MockBean
     EmailSendService emailSendService;
@@ -141,6 +147,21 @@ class AuthenticationServiceTest extends AbstractServiceTest {
         AuthenticationResponse response = authenticationService.authenticate(request);
 
         assertThat(response.token()).isNotNull();
+    }
+
+    @Test
+    void resetPassword_pass() {
+        String email = "email@gmail.com";
+        AuthUser newUser = initDefaultUser("username", email);
+        String newPassword = "newPassword";
+
+        String encodedPassword = "encodedPassword";
+        when(passwordEncoder.encode(anyString())).thenReturn(encodedPassword);
+
+        authenticationService.resetPassword(newUser, newPassword);
+        AuthUser dbUser = authUserService.findByEmail(email);
+
+        assertThat(dbUser.getPassword()).isEqualTo(encodedPassword);
     }
 
     @Test
