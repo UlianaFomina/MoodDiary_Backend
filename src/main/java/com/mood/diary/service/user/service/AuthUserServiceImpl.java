@@ -28,6 +28,13 @@ public class AuthUserServiceImpl implements AuthUserService {
     }
 
     @Override
+    public AuthUser findById(String id) {
+        return authUserRepository
+                .findById(id)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with id: '%s' not found!", id)));
+    }
+
+    @Override
     public AuthUser save(AuthUser authUser) {
         return authUserRepository.save(authUser);
     }
