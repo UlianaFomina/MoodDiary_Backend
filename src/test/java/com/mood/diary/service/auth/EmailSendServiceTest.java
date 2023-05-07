@@ -32,7 +32,7 @@ class EmailSendServiceTest {
         MimeMessage mimeMessage = new JavaMailSenderImpl().createMimeMessage();
         when(javaMailSender.createMimeMessage()).thenReturn(mimeMessage);
 
-        emailSendService.send("email@gmail.com", "");
+        emailSendService.send("email@gmail.com", "", "");
 
         verify(javaMailSender).send(mimeMessage);
     }
@@ -43,6 +43,6 @@ class EmailSendServiceTest {
         when(javaMailSender.createMimeMessage()).thenReturn(mimeMessage);
 
         assertThatExceptionOfType(IllegalStateException.class)
-                .isThrownBy(() -> emailSendService.send("", ""));
+                .isThrownBy(() -> emailSendService.send("", "", ""));
     }
 }

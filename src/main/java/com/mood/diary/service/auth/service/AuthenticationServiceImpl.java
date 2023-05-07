@@ -1,12 +1,12 @@
 package com.mood.diary.service.auth.service;
 
-import com.mood.diary.service.auth.constant.EmailTemplate;
 import com.mood.diary.service.auth.exception.variants.PasswordMustNotBeEqualsPreviousException;
 import com.mood.diary.service.auth.exception.variants.UserEmailNotConfirmedException;
 import com.mood.diary.service.auth.model.request.AuthenticationRequest;
 import com.mood.diary.service.auth.model.request.RegisterRequest;
 import com.mood.diary.service.auth.model.response.AuthenticationResponse;
 import com.mood.diary.service.auth.service.email.confirmation.EmailConfirmationService;
+import com.mood.diary.service.auth.service.email.parse.EmailParseTemplateServiceImpl;
 import com.mood.diary.service.auth.service.email.send.EmailSendService;
 import com.mood.diary.service.auth.service.jwt.JwtService;
 import com.mood.diary.service.user.model.AuthUser;
@@ -34,6 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthUserService authUserService;
     private final EmailSendService emailSendService;
+    private final EmailParseTemplateServiceImpl emailParseService;
     private final AuthenticationManager authenticationManager;
     private final EmailConfirmationService emailConfirmationService;
 
@@ -59,10 +60,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         String token = UUID.randomUUID().toString();
         String link = String.format("%s/api/v1/auth/confirm?token=%s", serverUrl, savedUser.getId());
-        String emailTemplate = EmailTemplate.buildEmail(savedUser.getUsername(), link);
+        String emailTemplate = emailParseService.getVerificationTemplate(savedUser.getUsername(), link);
 
         emailConfirmationService.putConfirmationToken(savedUser.getId(), token);
-        emailSendService.send(savedUser.getEmail(), emailTemplate);
+        emailSendService.send(savedUser.getEmail(), emailTemplate, "Verify your email!");
 
         return token(savedUser);
     }

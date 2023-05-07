@@ -82,7 +82,7 @@ class AuthenticationServiceTest extends AbstractServiceTest {
                 "pass", LocalDate.now(), "about", "url"
         );
 
-        doNothing().when(emailSendService).send(any(), any());
+        doNothing().when(emailSendService).send(any(), any(), any());
 
         AuthenticationResponse response = authenticationService.register(registerRequest);
         RMapCache<Object, Object> verificationTokens = redissonClient.getMapCache("confirmation-tokens");
@@ -119,7 +119,7 @@ class AuthenticationServiceTest extends AbstractServiceTest {
                 username, email,
                 password, LocalDate.now(), "about", "url"
         );
-        doNothing().when(emailSendService).send(any(), any());
+        doNothing().when(emailSendService).send(any(), any(), any());
         authenticationService.register(registerRequest);
 
         AuthenticationRequest request = EntityBuilder.makeAuthRequest(username, password);
@@ -137,7 +137,7 @@ class AuthenticationServiceTest extends AbstractServiceTest {
                 username, email,
                 password, LocalDate.now(), "about", "url"
         );
-        doNothing().when(emailSendService).send(any(), any());
+        doNothing().when(emailSendService).send(any(), any(), any());
         authenticationService.register(registerRequest);
 
         AuthUser user = authUserService.findByUsername(username);

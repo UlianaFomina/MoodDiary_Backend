@@ -76,7 +76,7 @@ class JwtServiceTest extends AbstractServiceTest {
                 username, email,
                 password, LocalDate.now(), "about", "url"
         );
-        doNothing().when(emailSendService).send(any(), any());
+        doNothing().when(emailSendService).send(any(), any(), any());
         authenticationService.register(registerRequest);
 
         AuthUser user = authUserService.findByUsername(username);
