@@ -72,10 +72,12 @@ public class PasswordRecoveryServiceImpl implements PasswordRecoveryService {
 
     @Override
     public String getByEmail(String email) {
-        return redissonClient
+        Object token = redissonClient
                 .getMapCache(RESET_PASSWORD_TOKENS)
-                .get(email)
-                .toString();
+                .get(email);
+        return token != null
+                ? token.toString()
+                : null;
     }
 
     @Override

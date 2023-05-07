@@ -1,7 +1,7 @@
 package com.mood.diary.service.exception;
 
-import com.mood.diary.service.auth.exception.ErrorDetail;
-import com.mood.diary.service.auth.exception.ErrorMessage;
+import com.mood.diary.service.exception.model.ErrorDetail;
+import com.mood.diary.service.exception.model.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

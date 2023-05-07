@@ -1,4 +1,4 @@
-package com.mood.diary.service.auth.exception;
+package com.mood.diary.service.exception.model;
 
 import java.util.Date;
 import java.util.List;

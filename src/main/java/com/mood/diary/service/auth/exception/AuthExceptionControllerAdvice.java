@@ -1,6 +1,8 @@
 package com.mood.diary.service.auth.exception;
 
 import com.mood.diary.service.auth.exception.variants.*;
+import com.mood.diary.service.exception.model.ErrorDetail;
+import com.mood.diary.service.exception.model.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
