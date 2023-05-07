@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 @Configuration
 public class GlobalConfiguration {
@@ -32,5 +35,23 @@ public class GlobalConfiguration {
     @Bean(name = "mvcHandlerMappingIntrospector")
     public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
         return new HandlerMappingIntrospector();
+    }
+
+    @Bean
+    public TemplateEngine templateEngine(ClassLoaderTemplateResolver classLoaderTemplateResolver) {
+        TemplateEngine templateEngine = new TemplateEngine();
+        templateEngine.setTemplateResolver(classLoaderTemplateResolver);
+
+        return templateEngine;
+    }
+
+    @Bean
+    public ClassLoaderTemplateResolver classLoaderTemplateResolver() {
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("email/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+
+        return templateResolver;
     }
 }

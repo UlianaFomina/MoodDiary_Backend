@@ -1,10 +1,10 @@
 package com.mood.diary.service.auth.service.email.recovery;
 
-import com.mood.diary.service.auth.constant.EmailTemplate;
 import com.mood.diary.service.auth.exception.variants.PasswordResetProcedureStartedException;
 import com.mood.diary.service.auth.exception.variants.TokenExpiredException;
 import com.mood.diary.service.auth.model.request.ResetPasswordRequest;
 import com.mood.diary.service.auth.service.AuthenticationService;
+import com.mood.diary.service.auth.service.email.parse.EmailParseTemplateService;
 import com.mood.diary.service.auth.service.email.send.EmailSendService;
 import com.mood.diary.service.user.model.AuthUser;
 import com.mood.diary.service.user.service.AuthUserService;
@@ -31,6 +31,7 @@ public class PasswordRecoveryServiceImpl implements PasswordRecoveryService {
     private final AuthUserService authUserService;
     private final EmailSendService emailSendService;
     private final AuthenticationService authenticationService;
+    private final EmailParseTemplateService emailParseTemplateService;
 
     @Override
     @Transactional
@@ -47,7 +48,7 @@ public class PasswordRecoveryServiceImpl implements PasswordRecoveryService {
         resetPasswordMap.put(email, token, 15L, TimeUnit.MINUTES);
 
         String link = String.format("%s/resetPassword?token=%s", frontendUrl, token);
-        String emailTemplate = EmailTemplate.buildEmail(email, link);
+        String emailTemplate = emailParseTemplateService.getResetPasswordTemplate(email, link);
 
         emailSendService.send(email, emailTemplate);
 
