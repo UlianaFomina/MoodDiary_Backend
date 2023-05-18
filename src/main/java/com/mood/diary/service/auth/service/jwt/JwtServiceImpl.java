@@ -1,5 +1,6 @@
 package com.mood.diary.service.auth.service.jwt;
 
+import com.mood.diary.service.user.model.AuthUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
@@ -32,8 +32,8 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(Collections.emptyMap(), userDetails);
+    public String generateToken(AuthUser authUser) {
+        return generateToken(Map.of("id", authUser.getId()), authUser);
     }
 
     @Override

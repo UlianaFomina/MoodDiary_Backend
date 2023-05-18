@@ -94,6 +94,7 @@ class JwtServiceTest extends AbstractServiceTest {
     void generateToken() {
         AuthUser user = AuthUser.builder()
                 .username("username")
+                .id("id")
                 .build();
 
         String token = jwtService.generateToken(user);
@@ -105,6 +106,7 @@ class JwtServiceTest extends AbstractServiceTest {
     void isTokenValid() {
         AuthUser user = AuthUser.builder()
                 .username("username")
+                .id("id")
                 .build();
 
         String token = jwtService.generateToken(user);

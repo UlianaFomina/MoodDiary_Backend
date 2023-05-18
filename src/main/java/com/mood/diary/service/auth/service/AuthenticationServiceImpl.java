@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,8 +100,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         authUserService.save(dbUser);
     }
 
-    private AuthenticationResponse token(UserDetails userDetails) {
-        String jwtToken = jwtService.generateToken(userDetails);
+    private AuthenticationResponse token(AuthUser authUser) {
+        String jwtToken = jwtService.generateToken(authUser);
 
         return new AuthenticationResponse(jwtToken);
     }
