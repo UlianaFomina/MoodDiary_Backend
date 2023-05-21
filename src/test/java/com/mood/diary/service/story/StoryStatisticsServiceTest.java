@@ -2,6 +2,7 @@ package com.mood.diary.service.story;
 
 import com.mood.diary.service.AbstractServiceTest;
 import com.mood.diary.service.auth.exception.variants.UserNotFoundException;
+import com.mood.diary.service.story.model.StatisticsGraphResponse;
 import com.mood.diary.service.story.model.Story;
 import com.mood.diary.service.story.service.StoryService;
 import com.mood.diary.service.story.service.statistics.StoryStatisticsService;
@@ -95,11 +96,11 @@ class StoryStatisticsServiceTest extends AbstractServiceTest {
     void getSatisfactionRatesInTimeRange() {
         AuthUser savedUser = getUserWithTimeRangeStories();
 
-        List<Double> ratesForLastDays = storyStatisticsService.satisfactionRatesForLastDays(savedUser.getId(), 3);
+        List<StatisticsGraphResponse> response = storyStatisticsService.satisfactionRatesForLastDays(savedUser.getId(), 3);
         List<Story> allSavedUserStories = storyService.findAllByUserId(savedUser.getId());
 
         assertThat(allSavedUserStories.size()).isEqualTo(6);
-        assertThat(ratesForLastDays)
+        assertThat(response.stream().map(StatisticsGraphResponse::satisfactionRate))
                 .containsExactlyInAnyOrder(0.4, 0.4, 0.4);
     }
 
@@ -107,20 +108,20 @@ class StoryStatisticsServiceTest extends AbstractServiceTest {
     void getSatisfactionRatesInTimeRange_empty() {
         AuthUser savedUser = initDefaultUser("username", "password");
 
-        List<Double> ratesForLastDays = storyStatisticsService.satisfactionRatesForLastDays(savedUser.getId(), 3);
+        List<StatisticsGraphResponse> response = storyStatisticsService.satisfactionRatesForLastDays(savedUser.getId(), 3);
 
-        assertThat(ratesForLastDays).isEmpty();
+        assertThat(response).isEmpty();
     }
 
     @Test
     void getSatisfactionRatesInTimeRange_wrong() {
         AuthUser savedUser = getUserWithTimeRangeStories();
 
-        List<Double> ratesForLastDays = storyStatisticsService.satisfactionRatesForLastDays(savedUser.getId(), -5);
+        List<StatisticsGraphResponse> response = storyStatisticsService.satisfactionRatesForLastDays(savedUser.getId(), -5);
         List<Story> allSavedUserStories = storyService.findAllByUserId(savedUser.getId());
 
         assertThat(allSavedUserStories.size()).isEqualTo(6);
-        assertThat(ratesForLastDays).isEmpty();
+        assertThat(response).isEmpty();
     }
 
     @Test

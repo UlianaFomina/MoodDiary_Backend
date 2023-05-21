@@ -1,5 +1,6 @@
 package com.mood.diary.service.story.service.statistics;
 
+import com.mood.diary.service.story.model.StatisticsGraphResponse;
 import com.mood.diary.service.story.model.Story;
 import com.mood.diary.service.user.model.AuthUser;
 import com.mood.diary.service.user.service.AuthUserService;
@@ -30,10 +31,10 @@ public class StoryStatisticsServiceImpl implements StoryStatisticsService {
     }
 
     @Override
-    public List<Double> satisfactionRatesForLastDays(String userId, int days) {
+    public List<StatisticsGraphResponse> satisfactionRatesForLastDays(String userId, int days) {
         return getForLastDays(userId, days)
                 .stream()
-                .map(Story::getSatisfactionRate)
+                .map(el -> new StatisticsGraphResponse(el.getSatisfactionRate(), el.getCreatedAt()))
                 .toList();
     }
 

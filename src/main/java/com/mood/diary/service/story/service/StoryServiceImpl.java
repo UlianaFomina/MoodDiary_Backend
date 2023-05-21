@@ -1,5 +1,6 @@
 package com.mood.diary.service.story.service;
 
+import com.mood.diary.service.standfort.AnalyzeService;
 import com.mood.diary.service.story.exception.variants.StoryNotFoundException;
 import com.mood.diary.service.story.model.Story;
 import com.mood.diary.service.story.model.request.StoryRequest;
@@ -19,12 +20,13 @@ import java.util.stream.Collectors;
 public class StoryServiceImpl implements StoryService {
 
     private final AuthUserService authUserService;
+    private final AnalyzeService analyzeService;
 
     @Override
     public String attachToUserById(StoryRequest storyRequest) {
         AuthUser dbUser = authUserService.findById(storyRequest.getUserId());
 
-        //TODO: calculate satisfactionParameter based on content
+        double satisfactionRate = analyzeService.satisfaction(storyRequest.getContent());
 
         Story story = Story.builder()
                 .createdAt(LocalDateTime.now())
@@ -32,6 +34,7 @@ public class StoryServiceImpl implements StoryService {
                 .content(storyRequest.getContent())
                 .userId(storyRequest.getUserId())
                 .id(UUID.randomUUID().toString())
+                .satisfactionRate(satisfactionRate)
                 .build();
 
         dbUser.getStories().add(story);
@@ -61,11 +64,11 @@ public class StoryServiceImpl implements StoryService {
     public void updateByIdAndUserId(UpdateStoryRequest updateStoryRequest) {
         AuthUser user = authUserService.findById(updateStoryRequest.getUserId());
 
-        //TODO: calculate satisfactionParameter based on content
+        double satisfactionRate = analyzeService.satisfaction(updateStoryRequest.getContent());
 
         Story story = findByUserIdAndStoryId(updateStoryRequest.getUserId(), updateStoryRequest.getStoryId())
                 .setUpdatedAt(LocalDateTime.now())
-                .setSatisfactionRate(0.1)
+                .setSatisfactionRate(satisfactionRate)
                 .setContent(updateStoryRequest.getContent());
 
         List<Story> stories = user.getStories()

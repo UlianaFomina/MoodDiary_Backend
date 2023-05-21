@@ -50,12 +50,10 @@ public class StoryStatisticsController {
                     """
     )
     @GetMapping("{userId}/{lastDays}/graph")
-    public StatisticsGraphResponse getSatisfactionRatesInTimeRange(
+    public List<StatisticsGraphResponse> getSatisfactionRatesInTimeRange(
             @Parameter(description = "User identifier", example = "userId", required = true) @Valid @NotNull @PathVariable String userId,
             @Parameter(description = "Value to configure time range", example = "3", required = true) @Valid @Min(0) @Max(90) @PathVariable int lastDays) {
-        List<Double> satisfactionRates = storyStatisticsService
+        return storyStatisticsService
                 .satisfactionRatesForLastDays(userId, lastDays);
-
-        return new StatisticsGraphResponse(satisfactionRates);
     }
 }
