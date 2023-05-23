@@ -1,5 +1,7 @@
 package com.mood.diary.service.config;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.modelmapper.ModelMapper;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -53,5 +55,14 @@ public class GlobalConfiguration {
         templateResolver.setTemplateMode(TemplateMode.HTML);
 
         return templateResolver;
+    }
+
+    @Bean
+    public Cloudinary cloudinary() {
+        return new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", "dhqr9ofbz",
+                "api_key", "321742738171243",
+                "api_secret", "ZX3mb0qQVTa564dwf2fu5-vp5-Y")
+        );
     }
 }

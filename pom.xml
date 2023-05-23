@@ -26,6 +26,7 @@
 		<redis.testcontainers.version>1.4.6</redis.testcontainers.version>
 		<thymeleaf.version>3.0.12.RELEASE</thymeleaf.version>
 		<stanford-corenlp.version>4.5.4</stanford-corenlp.version>
+		<cloudinary.version>1.33.0</cloudinary.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -134,6 +135,12 @@
 			<artifactId>stanford-corenlp</artifactId>
 			<version>${stanford-corenlp.version}</version>
 			<classifier>models</classifier>
+		</dependency>
+
+		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http44</artifactId>
+			<version>${cloudinary.version}</version>
 		</dependency>
 
 	</dependencies>

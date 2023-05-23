@@ -1,6 +1,7 @@
 package com.mood.diary.service.story.controller;
 
 import com.mood.diary.service.story.model.StatisticsGraphResponse;
+import com.mood.diary.service.story.model.StatisticsMoodResponse;
 import com.mood.diary.service.story.model.Story;
 import com.mood.diary.service.story.service.statistics.StoryStatisticsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,7 +51,7 @@ public class StoryStatisticsController {
                     """
     )
     @GetMapping("{userId}/{lastDays}/graph")
-    public List<StatisticsGraphResponse> getSatisfactionRatesInTimeRange(
+    public StatisticsMoodResponse getSatisfactionRatesInTimeRange(
             @Parameter(description = "User identifier", example = "userId", required = true) @Valid @NotNull @PathVariable String userId,
             @Parameter(description = "Value to configure time range", example = "3", required = true) @Valid @Min(0) @Max(90) @PathVariable int lastDays) {
         return storyStatisticsService

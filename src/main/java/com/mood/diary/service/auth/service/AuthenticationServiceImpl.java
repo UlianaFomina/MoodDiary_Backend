@@ -61,8 +61,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String link = String.format("%s/api/v1/auth/confirm?token=%s", serverUrl, savedUser.getId());
         String emailTemplate = emailParseService.getVerificationTemplate(savedUser.getUsername(), link);
 
-        emailConfirmationService.putConfirmationToken(savedUser.getId(), token);
-        emailSendService.send(savedUser.getEmail(), emailTemplate, "Verify your email!");
+        //emailConfirmationService.putConfirmationToken(savedUser.getId(), token);
+        //emailSendService.send(savedUser.getEmail(), emailTemplate, "Verify your email!");
 
         return token(savedUser);
     }

@@ -36,7 +36,7 @@ public class AuthConfiguration {
                 .cors()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**", "/swagger-ui/**", "/v3/**", "/error", "/api/v1/demo")
+                .requestMatchers("/api/v1/auth/**", "/swagger-ui/**", "/v3/**", "/error", "/api/v1/demo", "/api/v1/user/avatar")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

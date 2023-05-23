@@ -8,4 +8,10 @@ public record StatisticsGraphResponse (
         @Schema(description = "Array of satisfaction rates", example = "[0.3, 0.4, 0.24]")
         Double satisfactionRate,
         LocalDateTime time
-) {}
+) {
+        public Double satisfactionRate() {
+                return satisfactionRate == null
+                        ? 0.0
+                        : satisfactionRate;
+        }
+}

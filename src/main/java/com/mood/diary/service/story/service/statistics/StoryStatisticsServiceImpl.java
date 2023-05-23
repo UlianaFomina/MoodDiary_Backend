@@ -1,6 +1,7 @@
 package com.mood.diary.service.story.service.statistics;
 
 import com.mood.diary.service.story.model.StatisticsGraphResponse;
+import com.mood.diary.service.story.model.StatisticsMoodResponse;
 import com.mood.diary.service.story.model.Story;
 import com.mood.diary.service.user.model.AuthUser;
 import com.mood.diary.service.user.service.AuthUserService;
@@ -31,11 +32,37 @@ public class StoryStatisticsServiceImpl implements StoryStatisticsService {
     }
 
     @Override
-    public List<StatisticsGraphResponse> satisfactionRatesForLastDays(String userId, int days) {
-        return getForLastDays(userId, days)
+    public StatisticsMoodResponse satisfactionRatesForLastDays(String userId, int days) {
+        List<StatisticsGraphResponse> statisticsResponse = getForLastDays(userId, days)
                 .stream()
                 .map(el -> new StatisticsGraphResponse(el.getSatisfactionRate(), el.getCreatedAt()))
                 .toList();
+
+        String moodPhrase = getMoodPhrase(statisticsResponse);
+        return new StatisticsMoodResponse(statisticsResponse, moodPhrase);
+    }
+
+    private String getMoodPhrase(List<StatisticsGraphResponse> statisticsResponse) {
+        double averageMood = statisticsResponse
+                .stream()
+                .mapToDouble(StatisticsGraphResponse::satisfactionRate)
+                .average()
+                .orElse(0.0);
+
+        String tip;
+        if (averageMood >= 1.5) {
+            tip = "Your mood is excellent! Keep up the positive vibes!";
+        } else if (averageMood >= 0.5) {
+            tip = "Your mood is good! Stay optimistic!";
+        } else if (averageMood >= -0.5) {
+            tip = "Your mood is neutral. Keep a balanced mindset!";
+        } else if (averageMood >= -1.5) {
+            tip = "Your mood is not so great. Try to find some positivity!";
+        } else {
+            tip = "Your mood is very poor. Reach out for support and take care of yourself!";
+        }
+
+        return tip;
     }
 
     private Predicate<Story> timeRangePredicate(LocalDateTime start, LocalDateTime end) {

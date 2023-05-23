@@ -15,13 +15,13 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Story request body to create new one and attach to user")
 public class StoryRequest {
 
-    @Size(max = 200)
+    @Size(min = 10, max = 200)
     @Schema(description = "Short information about user",
             example = """
                     Passionate learner, creative thinker, and avid explorer.
                     Embracing life's challenges, seeking growth, and spreading positivity
                     Dreamer, doer, and lover of all things art.
-                    """, maxLength = 200, requiredMode = Schema.RequiredMode.REQUIRED)
+                    """, minLength = 10, maxLength = 200, requiredMode = Schema.RequiredMode.REQUIRED)
     private String content;
 
     @NotNull
