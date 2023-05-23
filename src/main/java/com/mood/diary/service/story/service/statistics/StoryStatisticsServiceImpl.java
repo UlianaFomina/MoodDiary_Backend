@@ -43,6 +43,9 @@ public class StoryStatisticsServiceImpl implements StoryStatisticsService {
     }
 
     private String getMoodPhrase(List<StatisticsGraphResponse> statisticsResponse) {
+        if(statisticsResponse.isEmpty()) {
+            return "";
+        }
         double averageMood = statisticsResponse
                 .stream()
                 .mapToDouble(StatisticsGraphResponse::satisfactionRate)
