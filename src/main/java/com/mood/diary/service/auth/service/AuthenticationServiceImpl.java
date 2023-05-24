@@ -29,6 +29,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Value("${server.url}")
     private String serverUrl;
 
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthUserService authUserService;
@@ -58,7 +61,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         AuthUser savedUser = authUserService.save(user);
 
         String token = UUID.randomUUID().toString();
-        String link = String.format("%s/api/v1/auth/confirm?token=%s", serverUrl, savedUser.getId());
+        String link = String.format("%s/verification?token=%s", frontendUrl, savedUser.getId());
         String emailTemplate = emailParseService.getVerificationTemplate(savedUser.getUsername(), link);
 
         emailConfirmationService.putConfirmationToken(savedUser.getId(), token);
