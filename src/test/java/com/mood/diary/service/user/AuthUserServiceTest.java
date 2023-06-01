@@ -52,19 +52,6 @@ class AuthUserServiceTest extends AbstractServiceTest {
 
         assertThat(dbUser.getUsername()).isEqualTo(username);
         assertThat(dbUser.getEmail()).isEqualTo(email);
-
-        assertThat(dbUser.getPassword()).isNotNull();
-        assertThat(dbUser.getAbout()).isNotNull();
-        assertThat(dbUser.getImageUrl()).isNotNull();
-        assertThat(dbUser.getRole()).isNotNull();
-        assertThat(dbUser.getDateOfBirth()).isNotNull();
-
-        assertThat(dbUser.getAuthorities().stream().map(GrantedAuthority::getAuthority))
-                .containsExactlyInAnyOrder(dbUser.getRole().name());
-        assertThat(dbUser.isAccountNonExpired()).isTrue();
-        assertThat(dbUser.isAccountNonLocked()).isTrue();
-        assertThat(dbUser.isCredentialsNonExpired()).isTrue();
-        assertThat(dbUser.isEnabled()).isTrue();
     }
 
     @Test

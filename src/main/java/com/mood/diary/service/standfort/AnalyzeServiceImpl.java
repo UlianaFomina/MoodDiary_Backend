@@ -27,9 +27,9 @@ public class AnalyzeServiceImpl implements AnalyzeService {
 
     private double convertSentimentToValue(String sentiment) {
         return switch (sentiment) {
-            case "Very negative" -> -2.0;
-            case "Negative" -> -1.0;
-            case "Neutral" -> 0.0;
+            case "Very negative" -> -2;
+            case "Negative" -> -1;
+            case "Neutral" -> 0;
             case "Positive" -> 1;
             case "Very positive" -> 2;
             default -> 0.0;

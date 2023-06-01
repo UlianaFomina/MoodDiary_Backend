@@ -46,6 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
         String email = registerRequest.getEmail();
         String username = registerRequest.getUsername();
+
         AuthUser user = AuthUser.builder()
                 .username(username)
                 .email(email)
