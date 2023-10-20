@@ -1,5 +1,7 @@
 package com.mood.diary.service.user.model;
 
+import com.mood.diary.service.board.model.Board;
+import com.mood.diary.service.goal.model.Goal;
 import com.mood.diary.service.story.model.Story;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -39,6 +41,10 @@ public class AuthUser implements UserDetails {
     private AuthUserRole role;
 
     private List<Story> stories = new ArrayList<>();
+
+    private List<Board> todos = new ArrayList<>();
+
+    private List<Goal> goals = new ArrayList<>();
 
     public AuthUser setPassword(String password) {
         this.password = password;
